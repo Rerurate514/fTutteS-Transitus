@@ -2,10 +2,24 @@
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import * as fs from "fs";
 import path from "path";
+import { hostname, port } from "./setConfig";
 
-const hostname = "127.0.0.1";
-const port = 3001;
-
+/**
+ * TransitusServer クラス
+ * ## OverView
+ * fTutteSフレームワークで構築されたシングルページアプリケーション（SPA）のために設計されたシンプルなHTTPサーバーです。
+ * このサーバーは、ファイルシステムから静的ファイルを提供するとともに、SPAのルーティング要件に対応するために、
+ * 特定のリクエストに対して常に指定されたHTMLファイルを返します。
+ * これにより、クライアントサイドのルーティングが適切に機能するようサポートします。
+ *
+ * ## Constructor
+ * @param htmlFilePath アプリケーションの単一のエントリーポイントとなるHTMLファイルのパス（例: `index.html`）
+ *
+ * ## Methods
+ * ### run()
+ * HTTPサーバーを起動し、指定されたホスト名とポートでリクエストのリッスンを開始します。
+ * サーバーが正常に起動すると、コンソールにメッセージが出力されます。
+ */
 export class TransitusServer {
     constructor(protected htmlFilePath: string){}
 

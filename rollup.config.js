@@ -4,11 +4,11 @@ import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 
 const index = {
-    input: 'src/index.ts',
+    input: 'dist/index.js',
     output: [
         {
-            file: 'dist/index.esm.js',
-            format: 'es',
+            file: 'dist/index.js',
+            format: 'esm',
             sourcemap: true,
         },
     ],
@@ -107,4 +107,4 @@ const server_run = {
     ],
 };
 
-export default [ index, script, server_run ];
+export default [ index ];

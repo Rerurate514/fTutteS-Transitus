@@ -1,3 +1,81 @@
+# fTutteS-Transitus
+![NPM Version](https://img.shields.io/npm/v/transitus)
+![NPM Unpacked Size : mjs and js](https://img.shields.io/npm/unpacked-size/transitus)
+![NPM Last Update](https://img.shields.io/npm/last-update/transitus)
+![NPM Downloads](https://img.shields.io/npm/dw/transitus)
+![NPM License](https://img.shields.io/npm/l/transitus)
+![npm package minimized gzipped size](https://img.shields.io/bundlejs/size/transitus)
+![GitHub repo size](https://img.shields.io/github/repo-size/rerurate514/fTutteS-transitus)
+![GitHub branch status](https://img.shields.io/github/checks-status/rerurate514/fTutteS-transitus/develop)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/rerurate514/fTutteS-transitus)
+![GitHub last commit](https://img.shields.io/github/last-commit/rerurate514/fTutteS-transitus)
+![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Frerurate)
+
+latest version -> transitus@0.1.6
+
+## Installation
+このライブラリは単体でのセットアップは推奨していません。
+代わりに[tommand](https://github.com/Rerurate514/fTutteS-tommand)ライブラリによるセットアップが推奨されています。
+```shell
+npx tommand create-transitus-ftuttes プロジェクト名
+```
+
+## Usage
+最初にTommandによってテンプレートプロジェクトが作成された後、以下のコマンドを実行します。
+```shell
+npm run dev
+```
+
+このコマンドを実行すると、nodeJsサーバーが起動します。
+この時、`index.html`ファイルはプロジェクトルートに置かれていかなければなりません。
+
+### Compoent Example
+最初に`Router`クラスを作ります。
+```typescript
+const router = new Router("/");
+```
+コンストラクタには最初に表示されるホームパスを文字列で代入します。
+
+次に`AppRouter`コンポーネントを使用します。
+```typescript
+const appRoutes = new Map<string, View>();
+appRoutes.set("/", new HomePage());
+appRoutes.set("/about", new AboutPage());
+appRoutes.set("/contact", new ContactPage());
+
+const appRouter = new AppRouter({
+    routes: appRoutes,      // 定義したルートマップ
+    page404: new NotFoundPage(), // 404ページ
+    homePage: new HomePage(),    // ホームページ（パスが"/"の場合や、不正なパス形式の場合）
+    startPageRoute: "/" // アプリケーション起動時の現在のパス
+});
+```
+これを`assembleView`でアセンブルします。
+
+ページの遷移には`Router`の`push`メソッドと`pop`メソッドを使用します。
+引数にはパスを入れます。
+```typescript
+new ElevatedButton({
+    onClick: () => {
+        router.push("about");
+    },
+    child: new Text({
+        text: "Go to the About page"
+    })
+});
+
+new ElevatedButton({
+    onClick: () => {
+        router.pop();
+    },
+    child: new Text({
+        text: "もどる"
+    })
+});
+```
+
+全体のコードを以下に記します。
+```typescript
 import {
     View,
     Text,
@@ -7,12 +85,11 @@ import {
     TextCSS,
     FontCSS,
     assembleView,
-    setupDevMode,
     BorderCSS,
     ProviderObserver,
 } from 'ftuttes';
-import { AppRouter } from './transitus/components/appRouter';
-import { Router } from './transitus/logic/router';
+
+import { AppRouter, Router } from 'transitus';
 
 new ProviderObserver().outLogs(true);
 
@@ -201,9 +278,8 @@ export class App extends View {
     }
 }
 
-// --- アプリケーションのエントリーポイント ---
-
-// 開発モードを有効にする（デバッグ時にViewの識別がしやすくなります）
-setupDevMode(false);
-
 assembleView(new App());
+```
+
+## ライセンス 
+MIT
