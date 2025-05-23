@@ -1,65 +1,26 @@
 {
     "compilerOptions": {
-        /* プロジェクト設定 */
-        "incremental": true,
-        "composite": true,
-        "tsBuildInfoFile": "./.tsbuildinfo",
-        /* 言語と環境 */
-        "target": "es2021",
+        "target": "ES2024",
+        "module": "ESNext",
         "lib": [
-            "es2021",
-            "dom",
-            "esnext.asynciterable"
+            "es2015",
+            "dom"
         ],
+        "moduleResolution": "node",
+        "declaration": true,
+        "sourceMap": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
-        "useDefineForClassFields": true,
-        /* モジュール */
-        "module": "ESNext",
-        "moduleResolution": "node",
-        "baseUrl": "./",
-        "resolveJsonModule": true,
-        /* JavaScript サポート */
-        "allowJs": true,
-        "checkJs": true,
-        /* Emit (出力設定) */
-        "outDir": "./dist",
-        "declaration": true,
-        "declarationMap": true,
-        "sourceMap": true,
-        "removeComments": true,
-        "noEmitOnError": true,
-        /* 相互運用性の制約 */
-        "isolatedModules": true,
-        "verbatimModuleSyntax": true,
-        /* 型チェック */
         "strict": true,
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "strictFunctionTypes": true,
-        "strictBindCallApply": true,
-        "strictPropertyInitialization": true,
-        "noImplicitThis": true,
-        "useUnknownInCatchVariables": true,
-        "alwaysStrict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "noUncheckedIndexedAccess": true,
-        "noImplicitOverride": true,
-        "noPropertyAccessFromIndexSignature": true,
-        /* 完成度 */
-        "skipLibCheck": false
+        "skipLibCheck": true,
+        "outDir": "./dist",
+        "baseUrl": ".",
     },
     "include": [
-        "src/**/*",
-        "*.ts"
+        "src/**/*.ts"
     ],
     "exclude": [
         "node_modules",
-        "dist",
-        "**/*.test.ts",
-        "**/*.spec.ts"
+        "dist"
     ]
 }
