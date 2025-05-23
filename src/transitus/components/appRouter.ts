@@ -77,7 +77,6 @@ export const pathProvider = Provider.createProvider(() => {
  * @example
  * ```typescript
  * import {
- *   AppRouter,
  *   View,
  *   Text,
  *   Column,
@@ -88,6 +87,13 @@ export const pathProvider = Provider.createProvider(() => {
  *   FontCSS,
  *   pathProvider
  * } from 'ftuttes';
+ * import {
+ *   AppRouter,
+ *   Router,
+ * }
+ * 
+ * // defined router and home path
+ * const router = new Router("/");
  *
  * // defined pages
  * class HomePage extends View {
@@ -108,7 +114,7 @@ export const pathProvider = Provider.createProvider(() => {
  *         }),
  *         new ElevatedButton({
  *           text: "Go to AboutPage",
- *           onClick: () => { pathProvider.update(() => "/about"); }
+ *           onClick: () => { router.push("/about") }
  *         })
  *       ]
  *     });
@@ -133,7 +139,7 @@ export const pathProvider = Provider.createProvider(() => {
  *         }),
  *         new ElevatedButton({
  *           text: "back to HomePage",
- *           onClick: () => { pathProvider.update(() => "/"); }
+ *           onClick: () => { router.push("/") }
  *         })
  *       ]
  *     });

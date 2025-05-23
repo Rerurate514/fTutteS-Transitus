@@ -1,7 +1,9 @@
 {
   "name": "transitus",
-  "version": "0.1.0",
-  "main": "index.js",
+  "version": "0.1.6",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "npm run clean && npm run build:ts && npm run bundle",
