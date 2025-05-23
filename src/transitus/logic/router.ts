@@ -16,7 +16,6 @@ export class Router {
     }
 
     private route(){
-        
         if(this.routesHistory.length === 0) {
             window.history.pushState({}, "", this.homePath);
             pathProvider.update(() => this.homePath);
