@@ -2,9 +2,7 @@
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import * as fs from "fs";
 import path from "path";
-
-const hostname = "127.0.0.1";
-const port = 3001;
+import { hostname, port } from "./setConfig";
 
 /**
  * TransitusServer クラス
