@@ -15,6 +15,9 @@
         "skipLibCheck": true,
         "outDir": "./dist",
         "baseUrl": ".",
+        "paths": {
+            "@transitus/*": ["src/transitus/*", "dist/transitus/*"],
+        }
     },
     "include": [
         "src/**/*.ts"
