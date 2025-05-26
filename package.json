@@ -29,5 +29,9 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
     "rollup": "^4.40.2"
-  }
+  },
+  "files": [
+    "dist",
+    "src"
+  ]
 }
