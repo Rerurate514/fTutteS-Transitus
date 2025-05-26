@@ -83,9 +83,25 @@ const server_run = {
         },
     ],
     plugins: [
-        typescript(),
+        typescript({
+            declaration: false,
+            compilerOptions: {
+                target: 'esnext',
+                module: 'esnext',
+            },
+            transformers: [
+                service => ({
+                    before: [
+                        context => node => {
+                            return node;
+                        }
+                    ],
+                    after: []
+                })
+            ]
+        }),
         nodeResolve({
-            browser: false,
+            browser: true,
         }),
         commonjs(),
         terser({
