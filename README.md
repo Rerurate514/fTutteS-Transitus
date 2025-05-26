@@ -11,7 +11,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/rerurate514/fTutteS-transitus)
 ![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Frerurate)
 
-latest version -> transitus@0.1.8
+latest version -> transitus@0.1.9
 
 ## Installation
 このライブラリは単体でのセットアップは推奨していません。
