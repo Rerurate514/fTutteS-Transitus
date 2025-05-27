@@ -3,57 +3,51 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 
-const index = {
+const nodeExternals = [
+    'commander',
+    'events',
+    'fs',
+    'path',
+    'util',
+];
+
+const libraryConfig = {
     input: 'dist/index.js',
     output: [
         {
             file: 'dist/index.js',
-            format: 'esm',
-            sourcemap: true,
+            format: 'cjs'
         },
-    ],
-    plugins: [
-        typescript(),
-        nodeResolve({
-            browser: false,
-        }),
-        commonjs(),
-        terser({
-            compress: {
-                dead_code: true,
-                conditionals: true,
-                collapse_vars: true
-            },
-            mangle: {
-                keep_classnames: true,
-                keep_fnames: true
-            },
-            format: {
-                comments: false,
-                beautify: false
-            },
-            ecma: 2015
-        }),
-    ],
-};
-
-const script = {
-    input: 'src/script.ts',
-    output: [
+        {
+            file: 'dist/index.mjs',
+            format: 'es'
+        },
         {
             file: 'dist/bundle.js',
             format: 'umd',
+            name: 'Transitus',
             sourcemap: true,
-            name: 'transitus',
-            exports: "auto"
+            globals: {
+                ftuttes: 'ftuttes',
+            }
+        },
+        {
+            file: 'dist/bundle.esm.js',
+            format: 'es',
+            sourcemap: true,
+        },
+        {
+            file: 'dist/index.ts',
+            format: 'esm',
         },
     ],
+    external: [
+        ...nodeExternals, // 既存のNode.js外部モジュール
+        'ftuttes', // <--- これを追加: ftuttesをバンドルに含めない
+        // もしftuttesがサブパスを持つ場合、それらも外部化する（例: 'ftuttes/core', 'ftuttes/material' など）
+        // Rollupはデフォルトでモジュール識別子全体を外部化するため、'ftuttes'だけで十分なことが多い
+    ],
     plugins: [
-        typescript(),
-        nodeResolve({
-            browser: true,
-        }),
-        commonjs(),
         terser({
             compress: {
                 dead_code: true,
@@ -70,19 +64,10 @@ const script = {
             },
             ecma: 2015
         }),
-    ],
-};
-
-const server_run = {
-    input: 'src/transitus/logic/run.ts',
-    output: [
-        {
-            file: 'dist/run.esm.js',
-            format: 'es',
-            sourcemap: true,
-        },
-    ],
-    plugins: [
+        commonjs(),
+        nodeResolve({
+            browser: true,
+        }),
         typescript({
             declaration: false,
             compilerOptions: {
@@ -100,27 +85,7 @@ const server_run = {
                 })
             ]
         }),
-        nodeResolve({
-            browser: true,
-        }),
-        commonjs(),
-        terser({
-            compress: {
-                dead_code: true,
-                conditionals: true,
-                collapse_vars: true
-            },
-            mangle: {
-                keep_classnames: true,
-                keep_fnames: true
-            },
-            format: {
-                comments: false,
-                beautify: false
-            },
-            ecma: 2015
-        }),
-    ],
+    ]
 };
 
-export default [ index ];
+export default [libraryConfig];
