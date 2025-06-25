@@ -1,3 +1,4 @@
+import { DefaultRequestHandler } from './middlewares/defaultRequestHandler';
 import { TransitusServer } from './server';
 
 /**
@@ -12,7 +13,10 @@ import { TransitusServer } from './server';
  * ```
  */
 function runTransitusServer(){
-    const server = new TransitusServer("index.html");
+    const server = new TransitusServer([
+        new DefaultRequestHandler("index.html")
+    ]);
+
     server.run();
 }
 
