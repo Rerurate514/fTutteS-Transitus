@@ -1,6 +1,7 @@
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import { hostname, port } from "./setConfig";
 import { MiddleWare } from "@transitus/interface/middleware";
+import { ServerSetting } from "@transitus/interface/serverSetting";
 
 /**
  * TransitusServer クラス
@@ -12,28 +13,120 @@ import { MiddleWare } from "@transitus/interface/middleware";
  *
  * ## Constructor
  * @param middlewares Middlewareインターフェースを継承したクラスでsequenceに登録された動作を順次実行します。
+ * @param settings ServerSettingインターフェースを継承したクラスでサーバーの設定を行います。
  *
  * ## Methods
  * ### run()
  * HTTPサーバーを起動し、指定されたホスト名とポートでリクエストのリッスンを開始します。
  * サーバーが正常に起動すると、コンソールにメッセージが出力されます。
+ * 
+ * ### stop()
+ * サーバーを停止し、すべての設定のクリーンアップを実行します。
  */
 export class TransitusServer {
-    constructor(
-        protected middlewares: MiddleWare[] = []
-    ){}
+    private server?: Server;
 
-    public run() {
-        const server: Server = createServer(
+    constructor(
+        protected middlewares: MiddleWare[] = [],
+        protected settings: ServerSetting[] = [],
+    ) {}
+
+    public run(): void {
+        this.server = createServer(
             (request: IncomingMessage, response: ServerResponse) => {
-                this.middlewares.forEach((middleware: MiddleWare) => {
-                    middleware.sequence(request, response);
-                });
+                try {
+                    this.middlewares.forEach((middleware: MiddleWare) => {
+                        if (!response.destroyed && !response.headersSent) {
+                            middleware.sequence(request, response);
+                        }
+                    });
+                } catch (error) {
+                    console.error("Middleware error:", error);
+                    if (!response.headersSent) {
+                        response.statusCode = 500;
+                        response.end("Internal Server Error");
+                    }
+                }
             }
         );
 
-        server.listen(port, hostname, () => {
+        this.initializeSettings();
+
+        this.server.listen(port, hostname, () => {
             console.log(`Server running at http://${hostname}:${port}/`);
         });
+
+        this.server.on("error", (error) => {
+            console.error("Server error:", error);
+        });
+
+        this.setupGracefulShutdown();
+    }
+
+    private initializeSettings(): void {
+        this.settings.forEach((setting: ServerSetting) => {
+            try {
+                setting.initialize(this.server!, this);
+                if (setting.name) {
+                    console.log(`⚙️  ${setting.name} setting initialized`);
+                }
+            } catch (error) {
+                console.error(`Error initializing setting ${setting.name || "unknown"}:`, error);
+            }
+        });
+    }
+
+    private setupGracefulShutdown(): void {
+        const shutdown = () => {
+            console.log("\nShutting down server...");
+            this.stop();
+        };
+
+        process.on("SIGINT", shutdown);
+        process.on("SIGTERM", shutdown);
+    }
+
+    public stop(): void {
+        if (this.server) {
+            this.server.close((error) => {
+                if (error) {
+                    console.error("Error closing server:", error);
+                } else {
+                    console.log("Server stopped");
+                }
+            });
+        }
+
+        this.cleanupSettings();
+    }
+
+    private cleanupSettings(): void {
+        this.settings.forEach((setting: ServerSetting) => {
+            try {
+                if (setting.cleanup) {
+                    setting.cleanup();
+                }
+            } catch (error) {
+                console.error(`Error cleaning up setting ${setting.name || "unknown"}:`, error);
+            }
+        });
+    }
+
+    public restart(): void {
+        console.log("Restarting server...");
+        
+        if (this.server) {
+            this.server.close(() => {
+                setTimeout(() => {
+                    this.run();
+                }, 100);
+            });
+        } else {
+            this.run();
+        }
+    }
+
+    public getServer(): Server | undefined {
+        return this.server;
     }
 }
