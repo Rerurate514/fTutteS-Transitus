@@ -20,7 +20,7 @@ export class Router {
             window.history.pushState({}, "", this.homePath);
             pathProvider.update(() => this.homePath);
         } else {
-            const path = this.routesHistory.at(-1);
+            const path = this.routesHistory[this.routesHistory.length];
 
             window.history.pushState({}, "", path)
             pathProvider.update(() => path ?? this.homePath);
