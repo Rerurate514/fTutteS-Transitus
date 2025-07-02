@@ -1,7 +1,7 @@
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import { hostname, port } from "./setConfig";
-import { MiddleWare } from "@transitus/interface/middleware";
-import { ServerSetting } from "@transitus/interface/serverSetting";
+import { MiddleWare } from "../interface/middleware";
+import { ServerSetting } from "../interface/serverSetting";
 
 /**
  * TransitusServer クラス

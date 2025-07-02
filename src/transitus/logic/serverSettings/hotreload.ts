@@ -1,15 +1,13 @@
-import { ITransitusServer, ServerSetting } from "@transitus/interface/serverSetting";
-import * as fs from 'fs';
+import { ITransitusServer, ServerSetting } from "../../interface/serverSetting";
 import { Server } from "http";
+import * as fs from 'fs';
 import * as path from 'path';
-import { TransitusServer } from "../server";
 
 export class HotReload implements ServerSetting {
     public readonly name = 'HotReload';
     
     private watchers: fs.FSWatcher[] = [];
     private reloadTimeout?: NodeJS.Timeout;
-    private serverInstance?: Server;
     private transitusServer?: ITransitusServer;
 
     constructor(
@@ -27,7 +25,6 @@ export class HotReload implements ServerSetting {
     ) {}
     
     initialize(server: Server, transitusServer: ITransitusServer): void {
-        this.serverInstance = server;
         this.transitusServer = transitusServer;
 
         if(!this.config.enabled) return;

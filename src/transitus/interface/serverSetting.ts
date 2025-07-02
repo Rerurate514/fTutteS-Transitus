@@ -1,4 +1,4 @@
-import { TransitusServer } from '@transitus/logic/server';
+import { TransitusServer } from '../logic/server';
 import { Server } from 'http';
 
 export interface ITransitusServer {
