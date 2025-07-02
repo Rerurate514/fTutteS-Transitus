@@ -26,6 +26,6 @@ server.run();
 if (process.env.NODE_ENV === "development") {
     setTimeout(() => {
         const status = hotReloadSetting.getStatus();
-        console.log("Hot Reload Status:", status);
+        console.log("🔥 Hot Reload Status:", status);
     }, 1000);
 }
