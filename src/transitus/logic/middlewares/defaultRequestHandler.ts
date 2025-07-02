@@ -1,4 +1,4 @@
-import { MiddleWare } from '@transitus/interface/middleware';
+import { MiddleWare } from '../../interface/middleware';
 import { IncomingMessage, ServerResponse } from 'http';
 import * as fs from "fs";
 import path from "path";
