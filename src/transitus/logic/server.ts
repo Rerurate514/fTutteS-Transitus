@@ -41,10 +41,10 @@ export class TransitusServer {
                         }
                     });
                 } catch (error) {
-                    console.error("Middleware error:", error);
+                    console.error("⚙️ Middleware error:", error);
                     if (!response.headersSent) {
                         response.statusCode = 500;
-                        response.end("Internal Server Error");
+                        response.end("⚙️ Internal Server Error");
                     }
                 }
             }
@@ -53,11 +53,11 @@ export class TransitusServer {
         this.initializeSettings();
 
         this.server.listen(port, hostname, () => {
-            console.log(`Server running at http://${hostname}:${port}/`);
+            console.log(`⚙️  Server running at http://${hostname}:${port}/`);
         });
 
         this.server.on("error", (error) => {
-            console.error("Server error:", error);
+            console.error("⚙️ Server error:", error);
         });
 
         this.setupGracefulShutdown();
@@ -68,31 +68,31 @@ export class TransitusServer {
             try {
                 setting.initialize(this.server!, this);
                 if (setting.name) {
-                    console.log(`⚙️  ${setting.name} setting initialized`);
+                    console.log(`✅ ${setting.name} setting initialized`);
                 }
             } catch (error) {
-                console.error(`Error initializing setting ${setting.name || "unknown"}:`, error);
+                console.error(`⚙️  Error initializing setting ${setting.name || "unknown"}:`, error);
             }
         });
     }
 
     private setupGracefulShutdown(): void {
         const shutdown = () => {
-            console.log("\nShutting down server...");
+            console.log("\n ⚙️ Shutting down server...");
             this.stop();
         };
 
-        process.on("SIGINT", shutdown);
-        process.on("SIGTERM", shutdown);
+        process.on("⚙️ SIGINT", shutdown);
+        process.on("⚙️ SIGTERM", shutdown);
     }
 
     public stop(): void {
         if (this.server) {
             this.server.close((error) => {
                 if (error) {
-                    console.error("Error closing server:", error);
+                    console.error("⚙️ Error closing server:", error);
                 } else {
-                    console.log("Server stopped");
+                    console.log("⚙️ Server stopped");
                 }
             });
         }
@@ -107,13 +107,13 @@ export class TransitusServer {
                     setting.cleanup();
                 }
             } catch (error) {
-                console.error(`Error cleaning up setting ${setting.name || "unknown"}:`, error);
+                console.error(`⚙️  Error cleaning up setting ${setting.name || "unknown"}:`, error);
             }
         });
     }
 
     public restart(): void {
-        console.log("Restarting server...");
+        console.log("⚙️  Restarting server...");
         
         if (this.server) {
             this.server.close(() => {
@@ -124,6 +124,8 @@ export class TransitusServer {
         } else {
             this.run();
         }
+
+        console.log("⚙️  Server restarted");
     }
 
     public getServer(): Server | undefined {
