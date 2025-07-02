@@ -29,7 +29,96 @@ npm run dev
 このコマンドを実行すると、nodeJsサーバーが起動します。
 この時、`index.html`ファイルはプロジェクトルートに置かれていかなければなりません。
 
-### Compoent Example
+### Server Example
+[tommand](https://github.com/Rerurate514/fTutteS-tommand)ライブラリでセットアップした場合、`run.ts`というファイルが`src/`にあるかと思います。
+その中身は以下のようになります。
+```typescript
+import { TransitusServer, DefaultRequestHandler, HotReload } from "./middlewares/defaultRequestHandler";
+
+process.env.NODE_ENV = "development";
+
+const middlewares = [
+    new DefaultRequestHandler("index.html"),
+];
+
+const settings = [
+    new HotReload({
+        watchPaths: ["./src", "./config", "./public"],
+        excludePatterns: ["node_modules", "dist", ".git", "*.log", "*.tmp"],
+        debounceMs: 500,
+        enabled: process.env.NODE_ENV === "development"
+    }),
+];
+
+const server = new TransitusServer(middlewares, settings);
+
+server.run();
+```
+
+`Transitus`サーバーを起動するには`TransitusServer`クラスを作成して、`run`メソッドを実行します。
+そして、`tommand`プロジェクトでデフォルトで規定された`npm run dev`を実行します。
+
+`TransitusServer`クラスは二つの引数を持ちます。
+- `middlewares`: `MiddleWare`クラスを継承したインスタンスの配列 
+- `serverSetting`: `ServerSetting`クラスを継承したインスタンスの配列
+
+#### MiddleWareクラス
+`MiddleWare`クラスの実装は以下の通りです。
+```typescript
+import { IncomingMessage, ServerResponse } from 'http';
+
+export interface MiddleWare { 
+    sequence(request: IncomingMessage, response: ServerResponse): void;
+}
+```
+基本的にミドルウェアは、リクエストとレスポンスの間でそれらを処理する中間処理を行います。
+`transitus`では、`DefaultRequestHandler`というミドルウェアを提供しています。
+
+##### DefaultRequestHandler
+`DefaultRequestHandler`はミドルウェアの一種です。
+このミドルウェアは、
+- DefaultRequestHandlerクラスはMiddleWareインターフェースを実装
+- HTTPリクエストとレスポンスの処理を担当
+- HTMLファイルパスのコンストラクタ注入による設定
+
+- URLパスの解析とファイルパス変換
+- コンテンツタイプの自動判定
+- HTMLルートと静的ファイルの区別処理
+- ファイルハンドリング
+- 静的ファイルの読み込みと提供
+- HTMLルートへの適切なレスポンス
+- エラーハンドリング（404, 500）
+- コンテンツ管理
+- 多様なファイル形式のサポート（HTML, JS, CSS, JSON, 画像など）
+- MIMEタイプの自動設定
+- SPAルーティング対応
+などの基本的なNodeJSサーバーに必要な機能が含まれています。
+
+#### ServerSettingクラス
+`ServerSetting`クラスの実装は以下の通りです。
+```typescript
+import { TransitusServer } from '../logic/server';
+import { Server } from 'http';
+
+export interface ITransitusServer {
+    restart(): void;
+    stop(): void;
+    getServer(): Server | undefined;
+}
+
+export interface ServerSetting { 
+    initialize(server: Server, tserver: TransitusServer): void;
+    cleanup?(): void;
+    name?: string;
+}
+```
+
+##### HotReload
+`HotReload`はファイルの変更を検知した際に自動的にリビルドする機構を提供しています。
+ただ、`WebSocket`を使用していないので、ブラウザ側は自身でリロードしなければなりません。
+※ただし、`npm run dev`を実行してから、`index.html`をVSCode拡張機能のLiveServerで起動するといい感じです。。。
+
+### Component Example
 最初に`Router`クラスを作ります。
 ```typescript
 const router = new Router("/");
