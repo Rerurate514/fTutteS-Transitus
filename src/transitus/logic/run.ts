@@ -4,7 +4,7 @@ import { HotReload } from "./serverSettings/hotreload";
 
 process.env.NODE_ENV = "development";
 
-const middlewares = [
+const middleWares = [
     new DefaultRequestHandler("index.html"),
 ];
 
@@ -17,6 +17,9 @@ const settings = [
     }),
 ];
 
-const server = new TransitusServer(middlewares, settings);
+const server = new TransitusServer({
+    middleWares: middleWares,
+    settings: settings
+});
 
 server.run();

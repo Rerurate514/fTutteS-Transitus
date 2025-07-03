@@ -3,6 +3,11 @@ import { hostname, port } from "./setConfig";
 import { MiddleWare } from "../interface/middleware";
 import { ServerSetting } from "../interface/serverSetting";
 
+interface TransitusServerOptions {
+    middleWares: MiddleWare[],
+    settings: ServerSetting[]
+}
+
 /**
  * TransitusServer クラス
  * ## OverView
@@ -12,7 +17,8 @@ import { ServerSetting } from "../interface/serverSetting";
  * これにより、クライアントサイドのルーティングが適切に機能するようサポートします。
  *
  * ## Constructor
- * @param middlewares Middlewareインターフェースを継承したクラスでsequenceに登録された動作を順次実行します。
+ * @param config TransitusServerOptionsインターフェースが入ります。その変数は以下の二つです。
+ * @param middleWares Middlewareインターフェースを継承したクラスでsequenceに登録された動作を順次実行します。
  * @param settings ServerSettingインターフェースを継承したクラスでサーバーの設定を行います。
  *
  * ## Methods
@@ -26,16 +32,13 @@ import { ServerSetting } from "../interface/serverSetting";
 export class TransitusServer {
     private server?: Server;
 
-    constructor(
-        protected middlewares: MiddleWare[] = [],
-        protected settings: ServerSetting[] = [],
-    ) {}
+    constructor(protected options: TransitusServerOptions) {}
 
     public run(): void {
         this.server = createServer(
             (request: IncomingMessage, response: ServerResponse) => {
                 try {
-                    this.middlewares.forEach((middleware: MiddleWare) => {
+                    this.options.middleWares.forEach((middleware: MiddleWare) => {
                         if (!response.destroyed && !response.headersSent) {
                             middleware.sequence(request, response);
                         }
@@ -64,7 +67,7 @@ export class TransitusServer {
     }
 
     private initializeSettings(): void {
-        this.settings.forEach((setting: ServerSetting) => {
+        this.options.settings.forEach((setting: ServerSetting) => {
             try {
                 setting.initialize(this.server!, this);
                 if (setting.name) {
@@ -101,7 +104,7 @@ export class TransitusServer {
     }
 
     private cleanupSettings(): void {
-        this.settings.forEach((setting: ServerSetting) => {
+        this.options.settings.forEach((setting: ServerSetting) => {
             try {
                 if (setting.cleanup) {
                     setting.cleanup();
