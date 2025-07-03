@@ -1,4 +1,4 @@
-import { ITransitusServer, ServerSetting } from "../../interface/serverSetting";
+import { ITransitusServer, ServerSetting } from "../../../interface/serverSetting";
 import { Server } from "http";
 import * as fs from 'fs';
 import * as path from 'path';

@@ -1,6 +1,6 @@
 import { DefaultRequestHandler } from "./middlewares/defaultRequestHandler";
 import { TransitusServer } from "./server";
-import { HotReload } from "./serverSettings/hotreload";
+import { HotReload } from "./serverSettings/hotreload/hotreload";
 
 process.env.NODE_ENV = "development";
 
