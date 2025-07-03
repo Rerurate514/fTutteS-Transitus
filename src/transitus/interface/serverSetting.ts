@@ -2,6 +2,7 @@ import { TransitusServer } from '../logic/server';
 import { Server } from 'http';
 
 export interface ITransitusServer {
+    run(): void;
     restart(): void;
     stop(): void;
     getServer(): Server | undefined;
